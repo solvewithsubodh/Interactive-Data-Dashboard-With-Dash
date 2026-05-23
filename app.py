@@ -57,11 +57,17 @@ selected_age = st.sidebar.slider(
     int(df["age"].max()),
     int(df["age"].max())
 )
+# Platform filter
+selected_platform = st.sidebar.selectbox(
+    "Select Platform",
+    df["platform_usage"].unique()
+)
 
 # Filtered dataframe
 filtered_df = df[
     (df["gender"] == selected_gender) &
-    (df["age"] <= selected_age)
+    (df["age"] <= selected_age) &
+    (df["platform_usage"] == selected_platform)
 ]
 
 # Show filtered data
@@ -75,3 +81,15 @@ fig4, ax4 = plt.subplots()
 sns.histplot(filtered_df["stress_level"], bins=10, kde=True, ax=ax4)
 
 st.pyplot(fig4)
+# Dynamic Metrics
+st.subheader("Dynamic Statistics")
+
+average_stress = filtered_df["stress_level"].mean()
+average_anxiety = filtered_df["anxiety_level"].mean()
+average_social_media = filtered_df["daily_social_media_hours"].mean()
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric("Average Stress Level", round(average_stress, 2))
+col2.metric("Average Anxiety Level", round(average_anxiety, 2))
+col3.metric("Average Social Media Hours", round(average_social_media, 2))
