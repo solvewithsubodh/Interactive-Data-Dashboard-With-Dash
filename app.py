@@ -41,3 +41,37 @@ fig3, ax3 = plt.subplots()
 sns.histplot(df["daily_social_media_hours"], bins=10, kde=True, ax=ax3)
 
 st.pyplot(fig3)
+# Sidebar filters
+st.sidebar.header("Filter Data")
+
+# Gender filter
+selected_gender = st.sidebar.selectbox(
+    "Select Gender",
+    df["gender"].unique()
+)
+
+# Age slider
+selected_age = st.sidebar.slider(
+    "Select Maximum Age",
+    int(df["age"].min()),
+    int(df["age"].max()),
+    int(df["age"].max())
+)
+
+# Filtered dataframe
+filtered_df = df[
+    (df["gender"] == selected_gender) &
+    (df["age"] <= selected_age)
+]
+
+# Show filtered data
+st.subheader("Filtered Dataset")
+st.write(filtered_df)
+
+# Filtered stress chart
+st.subheader("Filtered Stress Level Distribution")
+
+fig4, ax4 = plt.subplots()
+sns.histplot(filtered_df["stress_level"], bins=10, kde=True, ax=ax4)
+
+st.pyplot(fig4)
