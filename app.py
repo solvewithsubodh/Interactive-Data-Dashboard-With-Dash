@@ -9,38 +9,13 @@ df = pd.read_csv("Teen_Mental_Health_Dataset.csv")
 # Dashboard Title
 st.title("Social Media Impact on Teen Mental Health")
 
-# Show dataset
-st.subheader("Dataset Preview")
-st.write(df.head())
+# Create Tabs
+tab1, tab2, tab3 = st.tabs([
+    "Home",
+    "Analytics",
+    "Filtered Data"
+])
 
-# Basic dataset info
-st.subheader("Dataset Shape")
-st.write("Rows:", df.shape[0])
-st.write("Columns:", df.shape[1])
-
-# Gender distribution chart
-st.subheader("Gender Distribution")
-
-fig, ax = plt.subplots()
-sns.countplot(x="gender", data=df, ax=ax)
-
-st.pyplot(fig)
-
-# Stress level chart
-st.subheader("Stress Level Distribution")
-
-fig2, ax2 = plt.subplots()
-sns.histplot(df["stress_level"], bins=10, kde=True, ax=ax2)
-
-st.pyplot(fig2)
-
-# Social media usage
-st.subheader("Daily Social Media Usage")
-
-fig3, ax3 = plt.subplots()
-sns.histplot(df["daily_social_media_hours"], bins=10, kde=True, ax=ax3)
-
-st.pyplot(fig3)
 # Sidebar filters
 st.sidebar.header("Filter Data")
 
@@ -57,6 +32,7 @@ selected_age = st.sidebar.slider(
     int(df["age"].max()),
     int(df["age"].max())
 )
+
 # Platform filter
 selected_platform = st.sidebar.selectbox(
     "Select Platform",
@@ -70,26 +46,67 @@ filtered_df = df[
     (df["platform_usage"] == selected_platform)
 ]
 
-# Show filtered data
-st.subheader("Filtered Dataset")
-st.write(filtered_df)
-
-# Filtered stress chart
-st.subheader("Filtered Stress Level Distribution")
-
-fig4, ax4 = plt.subplots()
-sns.histplot(filtered_df["stress_level"], bins=10, kde=True, ax=ax4)
-
-st.pyplot(fig4)
 # Dynamic Metrics
-st.subheader("Dynamic Statistics")
-
 average_stress = filtered_df["stress_level"].mean()
 average_anxiety = filtered_df["anxiety_level"].mean()
 average_social_media = filtered_df["daily_social_media_hours"].mean()
 
-col1, col2, col3 = st.columns(3)
+# ---------------- HOME TAB ----------------
+with tab1:
 
-col1.metric("Average Stress Level", round(average_stress, 2))
-col2.metric("Average Anxiety Level", round(average_anxiety, 2))
-col3.metric("Average Social Media Hours", round(average_social_media, 2))
+    st.subheader("Dataset Preview")
+    st.write(df.head())
+
+    st.subheader("Dataset Shape")
+    st.write("Rows:", df.shape[0])
+    st.write("Columns:", df.shape[1])
+
+    st.subheader("Dynamic Statistics")
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Average Stress Level", round(average_stress, 2))
+    col2.metric("Average Anxiety Level", round(average_anxiety, 2))
+    col3.metric("Average Social Media Hours", round(average_social_media, 2))
+
+# ---------------- ANALYTICS TAB ----------------
+with tab2:
+
+    # Gender distribution chart
+    st.subheader("Gender Distribution")
+
+    fig, ax = plt.subplots()
+    sns.countplot(x="gender", data=df, ax=ax)
+
+    st.pyplot(fig)
+
+    # Stress level chart
+    st.subheader("Stress Level Distribution")
+
+    fig2, ax2 = plt.subplots()
+    sns.histplot(df["stress_level"], bins=10, kde=True, ax=ax2)
+
+    st.pyplot(fig2)
+
+    # Social media usage
+    st.subheader("Daily Social Media Usage")
+
+    fig3, ax3 = plt.subplots()
+    sns.histplot(df["daily_social_media_hours"], bins=10, kde=True, ax=ax3)
+
+    st.pyplot(fig3)
+
+# ---------------- FILTERED DATA TAB ----------------
+with tab3:
+
+    # Show filtered data
+    st.subheader("Filtered Dataset")
+    st.write(filtered_df)
+
+    # Filtered stress chart
+    st.subheader("Filtered Stress Level Distribution")
+
+    fig4, ax4 = plt.subplots()
+    sns.histplot(filtered_df["stress_level"], bins=10, kde=True, ax=ax4)
+
+    st.pyplot(fig4)
